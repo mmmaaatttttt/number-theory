@@ -109,22 +109,62 @@ function arithmeticDerivative(num) {
   return derivative;
 }
 
-// TODO: number of solutions to n' = k for varying k
-
-// TODO: relationship between (n + m)', n', m' for (n, m) = 1
-function derivativeSumAnalysis(num) {
-  let der = arithmeticDerivative(num);
-  let map = new Map();
-
-  for (let i = 1; i <= num / 2; i++) {
-    if (isSquareFree(i) && isSquareFree(num - i)) {
-      map.set(
-        [i, num - i],
-        (arithmeticDerivative(i) + arithmeticDerivative(num - i)) / der
-      );
-    }
+/**
+ * Determines whether a number is super-square-free; that is,
+ * whether all of its prime factors appear with exponent exactly 1,
+ * and furthermore, whether the smallest prime is 2 if the number of primes is even.
+ * @param {Number || Map} numOrFactorization
+ */
+function isSuperSquareFree(numOrFactorization) {
+  if (typeof numOrFactorization === "number") {
+    numOrFactorization = factorization(numOrFactorization);
   }
 
-  return map;
+  const numPrimes = numOrFactorization.size;
+  const hasTwo = numOrFactorization.has(2);
+
+  return (
+    isSquareFree(numOrFactorization) &&
+    ((numPrimes % 2 === 0 && hasTwo) || numPrimes % 2 === 1)
+  );
 }
-// WHAT NUMBERS VIOLATE n' + m' <= (n + m)' ???????? 49 is one such.
+
+// TODO: number of solutions to n' = k for varying k
+// let start = 2;
+// let end = 1e6;
+// let percent = 0;
+// let map = new Map();
+// while (start <= end) {
+//   let der = arithmeticDerivative(start);
+//   if (isPrime(der)) {
+//     if (map.has(der)) {
+//       map.get(der).push(start);
+//     } else {
+//       map.set(der, [start]);
+//     }
+//   }
+//   start++;
+//   let newPercent = Math.floor(start * 100/ end);
+//   if (newPercent > percent) {
+//     console.log(`${newPercent}% complete...`);
+//     percent = newPercent;
+//   }
+// }
+// console.log(map);
+
+// TODO: use memoization to calculate derivatives faster!
+
+// counting SSFs -> roughly 40.53% of all numbers
+// let total = 1e7;
+// let numSuperSquareFree = 0;
+// let percent = 0;
+// for (let num = 2; num <= total; num++) {
+//   numSuperSquareFree += +isSuperSquareFree(num);
+//   let newPercent = Math.floor(num * 100 / total);
+//   if (newPercent > percent) {
+//     console.log(num, numSuperSquareFree / num);
+//     percent = newPercent;
+//   }
+// }
+
+module.exports = { isSquareFree, isPrime };
