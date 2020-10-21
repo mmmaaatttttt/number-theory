@@ -30,6 +30,22 @@ function* primes() {
 }
 
 /**
+ * Generate a map where the keys are all primes up to x. Values are null.
+ * 
+ * @param {Number} x - upper bound for primes 
+ */
+function primesUpTo(x) {
+  let primeMap = new Map();
+  let primeGenerator = primes();
+  let prime = primeGenerator.next().value;
+  while (prime <= x) {
+    primeMap.set(prime, null);
+    prime = primeGenerator.next().value;
+  }
+  return primeMap;
+}
+
+/**
  * Returns a map of the prime factorization of a whole number.
  * Keys are prime divisors, values are the exponents.
  * @param {Number} num
@@ -167,4 +183,4 @@ function isSuperSquareFree(numOrFactorization) {
 //   }
 // }
 
-module.exports = { isSquareFree, isPrime };
+module.exports = { isSquareFree, isPrime, primes, primesUpTo };

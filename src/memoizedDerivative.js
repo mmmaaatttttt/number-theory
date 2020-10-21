@@ -23,19 +23,25 @@ function findSmallestPrimeDivisor(num) {
   return false;
 }
 
-let memoizedDerivative = (function() {
-  const derivatives = new Map([[2, 1], [3, 1], [5, 1], [6, 5]]);
+let memoizedDerivative = (function () {
+  const derivatives = new Map([
+    [2, 1],
+    [3, 1],
+    [5, 1],
+    [6, 5]
+  ]);
 
-  return function calc(num) {
+  return function calc(num, max = 1e6) {
     if (derivatives.has(num)) return derivatives.get(num);
     let firstPrime = findSmallestPrimeDivisor(num);
-    if (!firstPrime) derivatives.set(num, 1);
-    else
-      derivatives.set(
-        num,
-        firstPrime * calc(num / firstPrime) + num / firstPrime
-      );
-    return derivatives.get(num);
+    let nextDerivative = 1;
+    if (firstPrime) {
+      nextDerivative = firstPrime * calc(num / firstPrime) + num / firstPrime;
+    }
+    if (num <= max) {
+      derivatives.set(num, nextDerivative);
+    }
+    return nextDerivative;
   };
 })();
 
